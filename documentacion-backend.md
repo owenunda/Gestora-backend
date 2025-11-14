@@ -1,10 +1,10 @@
-# 📘 Documentación Backend – Proyecto Amara
+# 📘 Documentación Backend – Proyecto Gestora
 
 ## 📌 Información del Proyecto
 
 | Campo | Descripción |
 |-------|-------------|
-| **Nombre** | Gestora Backend - Proyecto Amara |
+| **Nombre** | Gestora Backend - Proyecto Gestora |
 | **Versión** | 1.0.0 |
 | **Framework** | NestJS |
 | **Base de Datos** | PostgreSQL |
@@ -14,7 +14,7 @@
 
 ## 🧩 Visión General
 
-Este documento describe la arquitectura y estructura completa del backend del proyecto **Amara**, un sistema integral diseñado para gestionar la producción de quesos y otros productos agroindustriales.
+Este documento describe la arquitectura y estructura completa del backend del proyecto **Gestora**, un sistema integral diseñado para gestionar la producción de quesos y otros productos agroindustriales.
 
 ### Objetivos del Sistema
 
@@ -748,7 +748,6 @@ npm run test:watch
 # Tests e2e
 npm run test:e2e
 ```
-
 
 ---
 
