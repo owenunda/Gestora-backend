@@ -1,32 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { User } from '../../generated/prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor() {}
 
-  create(createUserDto: CreateUserDto): Promise<User | null> {
-    return this.prisma.user.create({
-      data: createUserDto,
-    });
+  create(createUserDto: CreateUserDto): Promise<any> {
+    // TODO: Implement persistence layer
+    throw new Error('Method not implemented.');
   }
 
-  findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+  findAll(): Promise<any[]> {
+    // TODO: Implement persistence layer
+    throw new Error('Method not implemented.');
   }
 
-  findOne(id: number): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { id } });
+  findOne(id: number): Promise<any> {
+    // TODO: Implement persistence layer
+    throw new Error('Method not implemented.');
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
-    return this.prisma.user.update({ where: { id }, data: updateUserDto });
+  update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
+    // TODO: Implement persistence layer
+    throw new Error('Method not implemented.');
   }
 
-  remove(id: number): Promise<User | null> {
-    return this.prisma.user.delete({ where: { id } });
+  remove(id: number): Promise<any> {
+    // TODO: Implement persistence layer
+    throw new Error('Method not implemented.');
   }
 }
