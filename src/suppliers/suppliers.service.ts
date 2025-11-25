@@ -3,16 +3,25 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { suppliers } from '@prisma/client';
+import { ClientsService } from '../clients/clients.service';
 
 @Injectable()
 export class SuppliersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly clientsService: ClientsService,
+  ) {}
 
   async create(createSupplierDto: CreateSupplierDto): Promise<suppliers> {
+    const clientId = BigInt(createSupplierDto.client_id);
+    
+    // Validar que el cliente exista
+    await this.clientsService.findOne(clientId);
+
     return this.prisma.suppliers.create({
       data: {
         ...createSupplierDto,
-        client_id: BigInt(createSupplierDto.client_id),
+        client_id: clientId,
       },
     });
   }
