@@ -11,9 +11,7 @@ export class ClientsService {
   }
 
   async findAll(): Promise<clients[]> {
-    return this.prisma.clients.findMany({
-      orderBy: { created_at: 'desc' },
-    });
+    return this.prisma.clients.findMany();
   }
 
   async findOne(id: bigint): Promise<clients | null> {
