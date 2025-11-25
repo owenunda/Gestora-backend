@@ -30,6 +30,12 @@ export class ClientsService {
     return client;
   }
 
+  async findByEmail(email: string): Promise<clients | null> {
+    return this.prisma.clients.findFirst({
+      where: { email },
+    });
+  }
+
   async update(id: bigint, updateClientDto: UpdateClientDto): Promise<clients> {
     try {
       return await this.prisma.clients.update({
