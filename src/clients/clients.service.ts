@@ -1,13 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { clients, Prisma } from '@prisma/client';
+import { clients } from '@prisma/client';
+import { CreateClientDto } from './dto/create-client.dto';
+import { UpdateClientDto } from './dto/update-client.dto';
 
 @Injectable()
 export class ClientsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.clientsCreateInput): Promise<clients> {
-    return this.prisma.clients.create({ data });
+  async create(createClientDto: CreateClientDto): Promise<clients> {
+    return this.prisma.clients.create({
+      data: createClientDto,
+    });
   }
 
   async findAll(): Promise<clients[]> {
@@ -26,11 +30,11 @@ export class ClientsService {
     return client;
   }
 
-  async update(id: bigint, data: Prisma.clientsUpdateInput): Promise<clients> {
+  async update(id: bigint, updateClientDto: UpdateClientDto): Promise<clients> {
     try {
       return await this.prisma.clients.update({
         where: { id },
-        data,
+        data: updateClientDto,
       });
     } catch (error) {
       if (error.code === 'P2025') {

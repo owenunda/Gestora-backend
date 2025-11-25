@@ -2,10 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BigIntInterceptor } from './common/interceptors/bigint.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  // Interceptores globales
   app.useGlobalInterceptors(new BigIntInterceptor());
+  
+  // Validación global
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   // Configuración de Swagger/OpenAPI
   const config = new DocumentBuilder()
