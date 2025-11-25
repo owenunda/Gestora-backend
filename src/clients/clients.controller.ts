@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { ClientsService } from './clients.service';
 import { clients } from '@prisma/client';
 import { ParseBigIntPipe } from '../common/pipes/parse-bigint.pipe';
@@ -7,6 +7,7 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 
 @ApiTags('clients')
+@ApiBearerAuth()
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}

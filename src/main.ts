@@ -24,6 +24,7 @@ async function bootstrap() {
     .setTitle('Gestora API')
     .setDescription('API para el sistema de gestión de producción')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
