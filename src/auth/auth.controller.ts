@@ -6,7 +6,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 
 @ApiTags('auth')
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -22,8 +22,8 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @ApiOperation({ summary: 'Registrar nuevo usuario' })
-  @ApiResponse({ status: 201, description: 'Usuario registrado exitosamente' })
+  @ApiOperation({ summary: 'Registrar nuevo cliente' })
+  @ApiResponse({ status: 201, description: 'Cliente registrado exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);

@@ -13,40 +13,40 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.clientsService.findByEmail(email);
+  async validateClient(email: string, pass: string): Promise<any> {
+    const client = await this.clientsService.findByEmail(email);
 
-    if (user && (await bcrypt.compare(pass, user.password_hash))) {
-      const { password_hash, ...result } = user;
+    if (client && (await bcrypt.compare(pass, client.password_hash))) {
+      const { password_hash, ...result } = client;
       return result;
     }
     return null;
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
-    if (!user) {
+    const client = await this.validateClient(loginDto.email, loginDto.password);
+    if (!client) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
     
     // Convertir BigInt a string para el payload del JWT
-    const payload = { email: user.email, sub: user.id.toString() };
+    const payload = { email: client.email, sub: client.id.toString() };
     
     return {
       access_token: this.jwtService.sign(payload),
-      user,
+      client,
     };
   }
 
   async register(registerDto: RegisterDto) {
     const hashedPassword = await bcrypt.hash(registerDto.password_hash, 10);
     
-    const newUser = await this.clientsService.create({
+    const newClient = await this.clientsService.create({
       ...registerDto,
       password_hash: hashedPassword,
     });
 
-    const { password_hash, ...result } = newUser;
+    const { password_hash, ...result } = newClient;
     return result;
   }
 }

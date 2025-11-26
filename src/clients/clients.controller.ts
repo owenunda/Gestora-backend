@@ -8,7 +8,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 
 @ApiTags('clients')
 @ApiBearerAuth()
-@Controller('clients')
+@Controller('api/clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 

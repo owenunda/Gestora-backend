@@ -8,7 +8,7 @@ import { ParseBigIntPipe } from '../common/pipes/parse-bigint.pipe';
 
 @ApiTags('suppliers')
 @ApiBearerAuth()
-@Controller('suppliers')
+@Controller('api/suppliers')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 

@@ -3,9 +3,16 @@ import { AppModule } from './app.module';
 import { BigIntInterceptor } from './common/interceptors/bigint.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { EnvConfig } from './config/env.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Configuración de CORS
+  app.enableCors({
+    origin: EnvConfig.frontendUrls.split(','),
+    credentials: true,
+  });
   
   // Interceptores globales
   app.useGlobalInterceptors(new BigIntInterceptor());
