@@ -1,3 +1,5 @@
 import { CreateClientDto } from '../../clients/dto/create-client.dto';
 
-export class RegisterDto extends CreateClientDto {}
+import { OmitType } from '@nestjs/swagger';
+
+export class RegisterDto extends OmitType(CreateClientDto, ['plan', 'status'] as const) {}

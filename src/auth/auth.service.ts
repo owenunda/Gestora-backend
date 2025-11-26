@@ -43,6 +43,8 @@ export class AuthService {
     
     const newClient = await this.clientsService.create({
       ...registerDto,
+      plan: 'premium',
+      status: 'active',
       password_hash: hashedPassword,
     });
 
