@@ -7,9 +7,10 @@ import { SuppliersModule } from './suppliers/suppliers.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RawMaterialsModule } from './raw_materials/raw_materials.module';
 
 @Module({
-  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule],
+  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule, RawMaterialsModule],
   controllers: [AppController],
   providers: [
     AppService,
