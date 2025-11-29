@@ -9,8 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Configuración de CORS
+  const allowedOrigins = EnvConfig.frontendUrls.split(',').map(url => url.trim());
+  
+  console.log('Allowed CORS Origins:', allowedOrigins);
+
   app.enableCors({
-    origin: EnvConfig.frontendUrls.split(','),
+    origin: allowedOrigins,
     credentials: true,
   });
   
