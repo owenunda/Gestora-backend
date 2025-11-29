@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { RawMaterialsService } from './raw_materials.service';
 import { CreateRawMaterialDto } from './dto/create-raw-material.dto';
@@ -16,15 +16,17 @@ export class RawMaterialsController {
   @ApiOperation({ summary: 'Crear una nueva materia prima' })
   @ApiResponse({ status: 201, description: 'Materia prima creada exitosamente', type: CreateRawMaterialDto })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
-  create(@Body() createRawMaterialDto: CreateRawMaterialDto): Promise<raw_materials> {
-    return this.rawMaterialsService.create(createRawMaterialDto);
+  create(@Body() createRawMaterialDto: CreateRawMaterialDto, @Request() req): Promise<raw_materials> {
+    const clientId = BigInt(req.user.clientId);
+    return this.rawMaterialsService.create(createRawMaterialDto, clientId);
   }
 
   @Get()
   @ApiOperation({ summary: 'Obtener todas las materias primas' })
   @ApiResponse({ status: 200, description: 'Lista de materias primas obtenida exitosamente' })
-  findAll(): Promise<raw_materials[]> {
-    return this.rawMaterialsService.findAll();
+  findAll(@Request() req): Promise<raw_materials[]> {
+    const clientId = BigInt(req.user.clientId);
+    return this.rawMaterialsService.findAll(clientId);
   }
 
   @Get(':id')
@@ -32,8 +34,9 @@ export class RawMaterialsController {
   @ApiParam({ name: 'id', description: 'ID de la materia prima', example: '1' })
   @ApiResponse({ status: 200, description: 'Materia prima encontrada' })
   @ApiResponse({ status: 404, description: 'Materia prima no encontrada' })
-  findOne(@Param('id', ParseBigIntPipe) id: bigint): Promise<raw_materials | null> {
-    return this.rawMaterialsService.findOne(id);
+  findOne(@Param('id', ParseBigIntPipe) id: bigint, @Request() req): Promise<raw_materials | null> {
+    const clientId = BigInt(req.user.clientId);
+    return this.rawMaterialsService.findOne(id, clientId);
   }
 
   @Patch(':id')
@@ -47,8 +50,10 @@ export class RawMaterialsController {
   update(
     @Param('id', ParseBigIntPipe) id: bigint,
     @Body() updateRawMaterialDto: UpdateRawMaterialDto,
+    @Request() req
   ): Promise<raw_materials> {
-    return this.rawMaterialsService.update(id, updateRawMaterialDto);
+    const clientId = BigInt(req.user.clientId);
+    return this.rawMaterialsService.update(id, updateRawMaterialDto, clientId);
   }
 
   @Delete(':id')
@@ -61,7 +66,8 @@ export class RawMaterialsController {
   @ApiResponse({ status: 200, description: 'Materia prima eliminada exitosamente' })
   @ApiResponse({ status: 404, description: 'Materia prima no encontrada' })
   @ApiResponse({ status: 409, description: 'No se puede eliminar porque tiene registros relacionados' })
-  remove(@Param('id', ParseBigIntPipe) id: bigint): Promise<raw_materials> {
-    return this.rawMaterialsService.remove(id);
+  remove(@Param('id', ParseBigIntPipe) id: bigint, @Request() req): Promise<raw_materials> {
+    const clientId = BigInt(req.user.clientId);
+    return this.rawMaterialsService.remove(id, clientId);
   }
 }

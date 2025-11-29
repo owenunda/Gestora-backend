@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRawMaterialDto } from './dto/create-raw-material.dto';
 import { UpdateRawMaterialDto } from './dto/update-raw-material.dto';
@@ -14,17 +14,15 @@ export class RawMaterialsService {
     private readonly suppliersService: SuppliersService,
   ) {}
 
-  async create(createRawMaterialDto: CreateRawMaterialDto): Promise<raw_materials> {
-    const clientId = BigInt(createRawMaterialDto.client_id);
-    
+  async create(createRawMaterialDto: CreateRawMaterialDto, clientId: bigint): Promise<raw_materials> {
     // Validar que el cliente exista
     await this.clientsService.findOne(clientId);
 
-    // Si se proporciona supplier_id, validar que el proveedor exista
+    // Si se proporciona supplier_id, validar que el proveedor exista y pertenezca al cliente
     let supplierId: bigint | null = null;
     if (createRawMaterialDto.supplier_id) {
       supplierId = BigInt(createRawMaterialDto.supplier_id);
-      await this.suppliersService.findOne(supplierId);
+      await this.suppliersService.findOne(supplierId, clientId); // Esto ya valida que pertenezca al cliente
     }
 
     const { client_id, supplier_id, ...rest } = createRawMaterialDto;
@@ -38,13 +36,16 @@ export class RawMaterialsService {
     });
   }
 
-  async findAll(): Promise<raw_materials[]> {
+  async findAll(clientId: bigint): Promise<raw_materials[]> {
     return this.prisma.raw_materials.findMany({
+      where: {
+        client_id: clientId,
+      },
       orderBy: { created_at: 'desc' },
     });
   }
 
-  async findOne(id: bigint): Promise<raw_materials | null> {
+  async findOne(id: bigint, clientId: bigint): Promise<raw_materials | null> {
     const rawMaterial = await this.prisma.raw_materials.findUnique({
       where: { id },
     });
@@ -53,19 +54,24 @@ export class RawMaterialsService {
       throw new NotFoundException(`Raw material with ID ${id} not found`);
     }
 
+    if (rawMaterial.client_id !== clientId) {
+      throw new ForbiddenException('Access to this raw material is denied');
+    }
+
     return rawMaterial;
   }
 
-  async update(id: bigint, updateRawMaterialDto: UpdateRawMaterialDto): Promise<raw_materials> {
+  async update(id: bigint, updateRawMaterialDto: UpdateRawMaterialDto, clientId: bigint): Promise<raw_materials> {
+    // Verificar existencia y propiedad antes de actualizar
+    await this.findOne(id, clientId);
+
     const { client_id, supplier_id, ...rest } = updateRawMaterialDto;
     const data: any = { ...rest };
     
-    if (client_id) {
-      data.client_id = BigInt(client_id);
-    }
-
     if (supplier_id) {
-      data.supplier_id = BigInt(supplier_id);
+      const newSupplierId = BigInt(supplier_id);
+      await this.suppliersService.findOne(newSupplierId, clientId); // Validar nuevo proveedor
+      data.supplier_id = newSupplierId;
     }
 
     try {
@@ -81,7 +87,10 @@ export class RawMaterialsService {
     }
   }
 
-  async remove(id: bigint): Promise<raw_materials> {
+  async remove(id: bigint, clientId: bigint): Promise<raw_materials> {
+    // Verificar existencia y propiedad antes de eliminar
+    await this.findOne(id, clientId);
+
     try {
       return await this.prisma.raw_materials.delete({
         where: { id },

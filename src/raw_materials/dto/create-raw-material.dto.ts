@@ -12,14 +12,6 @@ export class CreateRawMaterialDto {
   @MaxLength(150)
   name: string;
 
-  @ApiProperty({
-    description: 'ID del cliente asociado',
-    example: '1',
-  })
-  @IsString()
-  @IsNotEmpty()
-  client_id: string;
-
   @ApiPropertyOptional({
     description: 'ID del proveedor (opcional)',
     example: '1',

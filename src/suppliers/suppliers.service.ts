@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
@@ -12,27 +12,30 @@ export class SuppliersService {
     private readonly clientsService: ClientsService,
   ) {}
 
-  async create(createSupplierDto: CreateSupplierDto): Promise<suppliers> {
-    const clientId = BigInt(createSupplierDto.client_id);
-    
-    // Validar que el cliente exista
+  async create(createSupplierDto: CreateSupplierDto, clientId: bigint): Promise<suppliers> {
+    // Validar que el cliente exista (aunque viene del token, es buena práctica o si se usa internamente)
     await this.clientsService.findOne(clientId);
+
+    const { client_id, ...rest } = createSupplierDto;
 
     return this.prisma.suppliers.create({
       data: {
-        ...createSupplierDto,
+        ...rest,
         client_id: clientId,
       },
     });
   }
 
-  async findAll(): Promise<suppliers[]> {
+  async findAll(clientId: bigint): Promise<suppliers[]> {
     return this.prisma.suppliers.findMany({
+      where: {
+        client_id: clientId,
+      },
       orderBy: { created_at: 'desc' },
     });
   }
 
-  async findOne(id: bigint): Promise<suppliers | null> {
+  async findOne(id: bigint, clientId: bigint): Promise<suppliers | null> {
     const supplier = await this.prisma.suppliers.findUnique({
       where: { id },
     });
@@ -41,17 +44,22 @@ export class SuppliersService {
       throw new NotFoundException(`Supplier with ID ${id} not found`);
     }
 
+    if (supplier.client_id !== clientId) {
+      throw new ForbiddenException('Access to this supplier is denied');
+    }
+
     return supplier;
   }
 
-  async update(id: bigint, updateSupplierDto: UpdateSupplierDto): Promise<suppliers> {
+  async update(id: bigint, updateSupplierDto: UpdateSupplierDto, clientId: bigint): Promise<suppliers> {
+    // Verificar existencia y propiedad antes de actualizar
+    await this.findOne(id, clientId);
+
     const { client_id, ...rest } = updateSupplierDto;
     const data: any = { ...rest };
     
-    if (client_id) {
-      data.client_id = BigInt(client_id);
-    }
-
+    // No permitimos cambiar el client_id
+    
     try {
       return await this.prisma.suppliers.update({
         where: { id },
@@ -65,7 +73,10 @@ export class SuppliersService {
     }
   }
 
-  async remove(id: bigint): Promise<suppliers> {
+  async remove(id: bigint, clientId: bigint): Promise<suppliers> {
+    // Verificar existencia y propiedad antes de eliminar
+    await this.findOne(id, clientId);
+
     try {
       return await this.prisma.suppliers.delete({
         where: { id },
