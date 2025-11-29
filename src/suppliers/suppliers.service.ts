@@ -16,7 +16,7 @@ export class SuppliersService {
     // Validar que el cliente exista (aunque viene del token, es buena práctica o si se usa internamente)
     await this.clientsService.findOne(clientId);
 
-    const { client_id, ...rest } = createSupplierDto;
+    const { ...rest } = createSupplierDto;
 
     return this.prisma.suppliers.create({
       data: {
@@ -55,7 +55,7 @@ export class SuppliersService {
     // Verificar existencia y propiedad antes de actualizar
     await this.findOne(id, clientId);
 
-    const { client_id, ...rest } = updateSupplierDto;
+    const { ...rest } = updateSupplierDto;
     const data: any = { ...rest };
     
     // No permitimos cambiar el client_id

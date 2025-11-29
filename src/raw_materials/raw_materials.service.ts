@@ -25,7 +25,7 @@ export class RawMaterialsService {
       await this.suppliersService.findOne(supplierId, clientId); // Esto ya valida que pertenezca al cliente
     }
 
-    const { client_id, supplier_id, ...rest } = createRawMaterialDto;
+    const { supplier_id, ...rest } = createRawMaterialDto;
 
     return this.prisma.raw_materials.create({
       data: {
@@ -65,7 +65,7 @@ export class RawMaterialsService {
     // Verificar existencia y propiedad antes de actualizar
     await this.findOne(id, clientId);
 
-    const { client_id, supplier_id, ...rest } = updateRawMaterialDto;
+    const { supplier_id, ...rest } = updateRawMaterialDto;
     const data: any = { ...rest };
     
     if (supplier_id) {
