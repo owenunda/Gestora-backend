@@ -38,9 +38,13 @@ export class InventoryRawMaterialMovementsService {
     const isEntry = this.isEntryMovement(createMovementDto.type);
     const quantity = createMovementDto.quantity;
 
-    // Validar que la cantidad sea positiva
-    if (quantity <= 0) {
+    // Validar que la cantidad sea positiva (excepto para ajustes)
+    if (createMovementDto.type !== 'adjustment' && quantity <= 0) {
       throw new BadRequestException('Quantity must be greater than 0');
+    }
+
+    if (quantity === 0) {
+      throw new BadRequestException('Quantity cannot be 0');
     }
 
     // 4. Calcular el delta (cambio en inventario)
