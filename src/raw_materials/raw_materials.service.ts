@@ -70,11 +70,17 @@ export class RawMaterialsService {
     const { supplier_id, ...rest } = updateRawMaterialDto;
     const data: any = { ...rest };
     
-    // Si se proporciona supplier_id, validar que el proveedor exista y pertenezca al cliente
-    if (supplier_id) {
-      const newSupplierId = BigInt(supplier_id);
-      await this.suppliersService.findOne(newSupplierId, clientId); // Validar nuevo proveedor
-      data.supplier_id = newSupplierId;
+    // Verificar si supplier_id está presente en el DTO (incluso si es null)
+    if ('supplier_id' in updateRawMaterialDto) {
+      if (supplier_id) {
+        // Si hay un valor, validar que el proveedor exista y pertenezca al cliente
+        const newSupplierId = BigInt(supplier_id);
+        await this.suppliersService.findOne(newSupplierId, clientId);
+        data.supplier_id = newSupplierId;
+      } else {
+        // Si es null o undefined, permitir establecerlo a null
+        data.supplier_id = null;
+      }
     }
 
     try {
