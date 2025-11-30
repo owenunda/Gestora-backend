@@ -8,9 +8,11 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RawMaterialsModule } from './raw_materials/raw_materials.module';
+import { InventoryRawMaterialsModule } from './inventory_raw_materials/inventory_raw_materials.module';
+import { InventoryRawMaterialMovementsModule } from './inventory_raw_material_movements/inventory_raw_material_movements.module';
 
 @Module({
-  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule, RawMaterialsModule],
+  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule, RawMaterialsModule, InventoryRawMaterialsModule, InventoryRawMaterialMovementsModule],
   controllers: [AppController],
   providers: [
     AppService,

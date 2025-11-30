@@ -25,6 +25,7 @@ export class RawMaterialsService {
       await this.suppliersService.findOne(supplierId, clientId); // Esto ya valida que pertenezca al cliente
     }
 
+    // Separar supplier_id del resto de los campos
     const { supplier_id, ...rest } = createRawMaterialDto;
 
     return this.prisma.raw_materials.create({
@@ -65,9 +66,11 @@ export class RawMaterialsService {
     // Verificar existencia y propiedad antes de actualizar
     await this.findOne(id, clientId);
 
+    // Separar supplier_id del resto de los campos
     const { supplier_id, ...rest } = updateRawMaterialDto;
     const data: any = { ...rest };
     
+    // Si se proporciona supplier_id, validar que el proveedor exista y pertenezca al cliente
     if (supplier_id) {
       const newSupplierId = BigInt(supplier_id);
       await this.suppliersService.findOne(newSupplierId, clientId); // Validar nuevo proveedor

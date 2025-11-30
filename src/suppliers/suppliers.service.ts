@@ -16,11 +16,9 @@ export class SuppliersService {
     // Validar que el cliente exista (aunque viene del token, es buena práctica o si se usa internamente)
     await this.clientsService.findOne(clientId);
 
-    const { ...rest } = createSupplierDto;
-
     return this.prisma.suppliers.create({
       data: {
-        ...rest,
+        ...createSupplierDto,
         client_id: clientId,
       },
     });
@@ -54,16 +52,13 @@ export class SuppliersService {
   async update(id: bigint, updateSupplierDto: UpdateSupplierDto, clientId: bigint): Promise<suppliers> {
     // Verificar existencia y propiedad antes de actualizar
     await this.findOne(id, clientId);
-
-    const { ...rest } = updateSupplierDto;
-    const data: any = { ...rest };
     
     // No permitimos cambiar el client_id
     
     try {
       return await this.prisma.suppliers.update({
         where: { id },
-        data,
+        data: updateSupplierDto,
       });
     } catch (error) {
       if (error.code === 'P2025') {
