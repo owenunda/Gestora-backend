@@ -12,9 +12,11 @@ import { InventoryRawMaterialsModule } from './inventory_raw_materials/inventory
 import { InventoryRawMaterialMovementsModule } from './inventory_raw_material_movements/inventory_raw_material_movements.module';
 import { ProductsCategoriesModule } from './products_categories/products_categories.module';
 import { ProductsModule } from './products/products.module';
+import { InventoryFinishedProductsModule } from './inventory_finished_products/inventory_finished_products.module';
+import { InventoryFinishedProductMovementsModule } from './inventory_finished_product_movements/inventory_finished_product_movements.module';
 
 @Module({
-  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule, RawMaterialsModule, InventoryRawMaterialsModule, InventoryRawMaterialMovementsModule, ProductsCategoriesModule, ProductsModule],
+  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule, RawMaterialsModule, InventoryRawMaterialsModule, InventoryRawMaterialMovementsModule, ProductsCategoriesModule, ProductsModule, InventoryFinishedProductsModule, InventoryFinishedProductMovementsModule],
   controllers: [AppController],
   providers: [
     AppService,

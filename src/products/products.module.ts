@@ -7,6 +7,7 @@ import { ProductsCategoriesModule } from '../products_categories/products_catego
 @Module({
   imports: [PrismaModule, ProductsCategoriesModule],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
+  exports: [ProductsService]
 })
 export class ProductsModule {}

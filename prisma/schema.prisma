@@ -8,26 +8,27 @@ datasource db {
 }
 
 model clients {
-  id                               BigInt                             @id @default(autoincrement())
-  name                             String                             @db.VarChar(150)
-  document_id                      String?                            @unique(map: "unique_document_id") @db.VarChar(50)
-  email                            String                             @unique(map: "unique_email") @db.VarChar(150)
-  phone                            String                             @db.VarChar(30)
-  address                          String                             @db.VarChar(255)
-  country                          String                             @db.VarChar(80)
-  plan                             String                             @db.VarChar(50)
-  status                           String                             @db.VarChar(20)
-  created_at                       DateTime?                          @default(now()) @db.Timestamp(6)
-  updated_at                       DateTime?                          @default(now()) @db.Timestamp(6)
-  password_hash                    String
-  inventory_finished_products      inventory_finished_products[]
-  inventory_raw_material_movements inventory_raw_material_movements[]
-  inventory_raw_materials          inventory_raw_materials[]
-  productions                      productions[]
-  products                         products[]
-  products_categories              products_categories[]
-  raw_materials                    raw_materials[]
-  suppliers                        suppliers[]
+  id                                   BigInt                                 @id @default(autoincrement())
+  name                                 String                                 @db.VarChar(150)
+  document_id                          String?                                @unique(map: "unique_document_id") @db.VarChar(50)
+  email                                String                                 @unique(map: "unique_email") @db.VarChar(150)
+  phone                                String                                 @db.VarChar(30)
+  address                              String                                 @db.VarChar(255)
+  country                              String                                 @db.VarChar(80)
+  plan                                 String                                 @db.VarChar(50)
+  status                               String                                 @db.VarChar(20)
+  created_at                           DateTime?                              @default(now()) @db.Timestamp(6)
+  updated_at                           DateTime?                              @default(now()) @db.Timestamp(6)
+  password_hash                        String
+  inventory_finished_product_movements inventory_finished_product_movements[]
+  inventory_finished_products          inventory_finished_products[]
+  inventory_raw_material_movements     inventory_raw_material_movements[]
+  inventory_raw_materials              inventory_raw_materials[]
+  productions                          productions[]
+  products                             products[]
+  products_categories                  products_categories[]
+  raw_materials                        raw_materials[]
+  suppliers                            suppliers[]
 }
 
 model inventory_finished_products {
@@ -78,21 +79,22 @@ model productions {
 }
 
 model products {
-  id                          BigInt                        @id @default(autoincrement())
-  client_id                   BigInt
-  name                        String                        @db.VarChar(150)
-  unit                        String                        @db.VarChar(20)
-  default_yield               Decimal?                      @db.Decimal(10, 2)
-  description                 String?
-  status                      String                        @db.VarChar(20)
-  image_url                   String?
-  created_at                  DateTime?                     @default(now()) @db.Timestamp(6)
-  updated_at                  DateTime?                     @default(now()) @db.Timestamp(6)
-  category_id                 BigInt?
-  inventory_finished_products inventory_finished_products[]
-  production_products         production_products[]
-  products_categories         products_categories?          @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  clients                     clients                       @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                                   BigInt                                 @id @default(autoincrement())
+  client_id                            BigInt
+  name                                 String                                 @db.VarChar(150)
+  unit                                 String                                 @db.VarChar(20)
+  default_yield                        Decimal?                               @db.Decimal(10, 2)
+  description                          String?
+  status                               String                                 @db.VarChar(20)
+  image_url                            String?
+  created_at                           DateTime?                              @default(now()) @db.Timestamp(6)
+  updated_at                           DateTime?                              @default(now()) @db.Timestamp(6)
+  category_id                          BigInt?
+  inventory_finished_product_movements inventory_finished_product_movements[]
+  inventory_finished_products          inventory_finished_products[]
+  production_products                  production_products[]
+  products_categories                  products_categories?                   @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clients                              clients                                @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model raw_materials {
@@ -165,4 +167,18 @@ model products_categories {
   updated_at  DateTime?  @default(now()) @db.Timestamp(6)
   products    products[]
   clients     clients    @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model inventory_finished_product_movements {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  client_id    BigInt
+  product_id   BigInt
+  type         String    @db.VarChar(20)
+  quantity     Decimal   @db.Decimal(10, 2)
+  unit         String    @db.VarChar(20)
+  reference_id String?   @db.Uuid
+  notes        String?
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  clients      clients   @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products     products  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
