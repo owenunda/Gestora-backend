@@ -19,38 +19,38 @@ Esta guía te ayudará a trabajar con Prisma ORM en el proyecto Gestora Backend.
 
 ```bash
 # Generar el cliente de Prisma (después de cambios en schema.prisma)
-pnpm prisma generate
+npx prisma generate
 
 # Introspección: Leer la base de datos y actualizar schema.prisma
-pnpm prisma db pull
+npx prisma db pull
 
 # Aplicar cambios del schema a la base de datos
-pnpm prisma db push
+npx prisma db push
 
 # Abrir Prisma Studio (UI visual para ver/editar datos)
-pnpm prisma studio
+npx prisma studio
 
 # Ver el estado de las migraciones
-pnpm prisma migrate status
+npx prisma migrate status
 
 # Formatear el archivo schema.prisma
-pnpm prisma format
+npx prisma format
 
 # Validar el schema.prisma
-pnpm prisma validate
+npx prisma validate
 ```
 
 ### Comandos de Migraciones
 
 ```bash
 # Crear una nueva migración (desarrollo)
-pnpm prisma migrate dev --name nombre_de_la_migracion
+npx prisma migrate dev --name nombre_de_la_migracion
 
 # Aplicar migraciones pendientes (producción)
-pnpm prisma migrate deploy
+npx prisma migrate deploy
 
 # Resetear la base de datos (¡CUIDADO! Borra todos los datos)
-pnpm prisma migrate reset
+npx prisma migrate reset
 ```
 
 ---
@@ -65,10 +65,10 @@ Si haces cambios en la base de datos desde Supabase UI:
 # 1. Hacer cambios en Supabase (agregar tabla, columna, etc.)
 
 # 2. Actualizar el schema local
-pnpm prisma db pull
+npx prisma db pull
 
 # 3. Regenerar el cliente
-pnpm prisma generate
+npx prisma generate
 
 # 4. Reiniciar el servidor de desarrollo (se hace automáticamente)
 ```
@@ -81,10 +81,10 @@ Si prefieres gestionar cambios desde `schema.prisma`:
 # 1. Editar prisma/schema.prisma
 
 # 2. Aplicar cambios a la base de datos
-pnpm prisma db push
+npx prisma db push
 
 # 3. Generar el cliente
-pnpm prisma generate
+npx prisma generate
 ```
 
 ---
@@ -655,7 +655,7 @@ async findActiveProducts(clientId: number) {
 
 ```bash
 # Abrir Prisma Studio para visualizar y editar datos
-pnpm prisma studio
+npx prisma studio
 ```
 
 Prisma Studio se abrirá en `http://localhost:5555` y te permitirá:
@@ -670,17 +670,17 @@ Prisma Studio se abrirá en `http://localhost:5555` y te permitirá:
 
 ```bash
 # Desarrollo diario
-pnpm prisma studio              # Abrir UI visual
-pnpm prisma generate            # Regenerar cliente después de cambios
-pnpm prisma db pull             # Sincronizar schema desde Supabase
+npx prisma studio              # Abrir UI visual
+npx prisma generate            # Regenerar cliente después de cambios
+npx prisma db pull             # Sincronizar schema desde Supabase
 
 # Validación
-pnpm prisma validate            # Validar schema.prisma
-pnpm prisma format              # Formatear schema.prisma
+npx prisma validate            # Validar schema.prisma
+npx prisma format              # Formatear schema.prisma
 
 # Migraciones (si decides usarlas)
-pnpm prisma migrate dev         # Crear y aplicar migración
-pnpm prisma migrate deploy      # Aplicar migraciones en producción
+npx prisma migrate dev         # Crear y aplicar migración
+npx prisma migrate deploy      # Aplicar migraciones en producción
 ```
 
 ---
@@ -708,8 +708,8 @@ pnpm prisma migrate deploy      # Aplicar migraciones en producción
 
 **¿Cómo actualizo mi schema si cambio algo en Supabase?**
 ```bash
-pnpm prisma db pull
-pnpm prisma generate
+npx prisma db pull
+npx prisma generate
 ```
 
 **¿Prisma Studio modifica mi base de datos?**
