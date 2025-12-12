@@ -16,6 +16,7 @@ import { ProductsModule } from './products/products.module';
 import { InventoryFinishedProductsModule } from './inventory_finished_products/inventory_finished_products.module';
 import { InventoryFinishedProductMovementsModule } from './inventory_finished_product_movements/inventory_finished_product_movements.module';
 import { UploadModule } from './upload/upload.module';
+import { ProductionsModule } from './productions/productions.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UploadModule } from './upload/upload.module';
     InventoryFinishedProductsModule, 
     InventoryFinishedProductMovementsModule,
     UploadModule,
+    ProductionsModule,
   ],
   controllers: [AppController],
   providers: [
