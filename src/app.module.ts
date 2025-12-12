@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -14,9 +15,26 @@ import { ProductsCategoriesModule } from './products_categories/products_categor
 import { ProductsModule } from './products/products.module';
 import { InventoryFinishedProductsModule } from './inventory_finished_products/inventory_finished_products.module';
 import { InventoryFinishedProductMovementsModule } from './inventory_finished_product_movements/inventory_finished_product_movements.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
-  imports: [PrismaModule, ClientsModule, SuppliersModule, AuthModule, RawMaterialsModule, InventoryRawMaterialsModule, InventoryRawMaterialMovementsModule, ProductsCategoriesModule, ProductsModule, InventoryFinishedProductsModule, InventoryFinishedProductMovementsModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    PrismaModule, 
+    ClientsModule, 
+    SuppliersModule, 
+    AuthModule, 
+    RawMaterialsModule, 
+    InventoryRawMaterialsModule, 
+    InventoryRawMaterialMovementsModule, 
+    ProductsCategoriesModule, 
+    ProductsModule, 
+    InventoryFinishedProductsModule, 
+    InventoryFinishedProductMovementsModule,
+    UploadModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

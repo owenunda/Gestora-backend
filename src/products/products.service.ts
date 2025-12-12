@@ -4,12 +4,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { products } from '@prisma/client';
 import { ProductsCategoriesService } from '../products_categories/products_categories.service';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly productsCategoriesService: ProductsCategoriesService,
+    private readonly uploadService: UploadService,
   ) {}
 
   async create(createProductDto: CreateProductDto, clientId: bigint): Promise<products> {
@@ -42,7 +44,7 @@ export class ProductsService {
     });
   }
 
-  async findOne(id: bigint, clientId: bigint): Promise<products | null> {
+  async findOne(id: bigint, clientId: bigint): Promise<products> {
     const product = await this.prisma.products.findUnique({
       where: { id },
       include: {
@@ -62,7 +64,7 @@ export class ProductsService {
   }
 
   async update(id: bigint, updateProductDto: UpdateProductDto, clientId: bigint): Promise<products> {
-    await this.findOne(id, clientId);
+    const existingProduct = await this.findOne(id, clientId);
 
     const { category_id, ...rest } = updateProductDto;
     const data: any = { ...rest };
@@ -75,6 +77,11 @@ export class ProductsService {
       } else {
         data.category_id = null;
       }
+    }
+
+    // Si se está actualizando la imagen, eliminar la anterior
+    if (updateProductDto.image_url && existingProduct.image_url) {
+      await this.uploadService.deleteProductImage(existingProduct.image_url);
     }
 
     try {
@@ -91,7 +98,12 @@ export class ProductsService {
   }
 
   async remove(id: bigint, clientId: bigint): Promise<products> {
-    await this.findOne(id, clientId);
+    const product = await this.findOne(id, clientId);
+
+    // Eliminar imagen de R2 si existe
+    if (product.image_url) {
+      await this.uploadService.deleteProductImage(product.image_url);
+    }
 
     try {
       return await this.prisma.products.delete({

@@ -50,8 +50,8 @@ export class CreateProductDto {
   status: string;
 
   @ApiPropertyOptional({
-    description: 'URL de la imagen del producto',
-    example: 'https://example.com/image.jpg',
+    description: 'URL de la imagen del producto. Debe obtenerse primero subiendo la imagen al endpoint /api/upload/product-image',
+    example: 'https://cdn.example.com/products/1/abc-123.jpg',
   })
   @IsString()
   @IsOptional()

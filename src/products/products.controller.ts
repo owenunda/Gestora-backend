@@ -13,7 +13,10 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Crear un nuevo producto' })
+  @ApiOperation({ 
+    summary: 'Crear un nuevo producto',
+    description: 'Crea un nuevo producto. Para agregar una imagen, primero súbela usando POST /api/upload/product-image y luego usa la URL retornada en el campo image_url.'
+  })
   @ApiResponse({ status: 201, description: 'Producto creado exitosamente', type: CreateProductDto })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
   create(@Body() createProductDto: CreateProductDto, @Request() req): Promise<products> {
@@ -34,7 +37,7 @@ export class ProductsController {
   @ApiParam({ name: 'id', description: 'ID del producto', example: '1' })
   @ApiResponse({ status: 200, description: 'Producto encontrado' })
   @ApiResponse({ status: 404, description: 'Producto no encontrado' })
-  findOne(@Param('id', ParseBigIntPipe) id: bigint, @Request() req): Promise<products | null> {
+  findOne(@Param('id', ParseBigIntPipe) id: bigint, @Request() req): Promise<products> {
     const clientId = BigInt(req.user.clientId);
     return this.productsService.findOne(id, clientId);
   }
@@ -42,7 +45,7 @@ export class ProductsController {
   @Patch(':id')
   @ApiOperation({ 
     summary: 'Actualizar un producto',
-    description: 'Actualiza parcialmente los datos de un producto existente.'
+    description: 'Actualiza parcialmente los datos de un producto existente. Si se actualiza image_url, la imagen anterior se eliminará automáticamente de R2.'
   })
   @ApiParam({ name: 'id', description: 'ID del producto', example: '1' })
   @ApiResponse({ status: 200, description: 'Producto actualizado exitosamente', type: CreateProductDto })
@@ -60,7 +63,7 @@ export class ProductsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ 
     summary: 'Eliminar un producto',
-    description: 'Elimina permanentemente un producto. No se puede deshacer.'
+    description: 'Elimina permanentemente un producto y su imagen asociada de R2. No se puede deshacer.'
   })
   @ApiParam({ name: 'id', description: 'ID del producto', example: '1' })
   @ApiResponse({ status: 200, description: 'Producto eliminado exitosamente' })
